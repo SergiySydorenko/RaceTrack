@@ -1,0 +1,90 @@
+﻿@model Vehicle
+@{
+    ViewData["Title"] = "Add vehicle on track";
+}
+
+    <h1>Add vehicle on track</h1>
+    <div>
+        <div>
+            <input type="radio" id="truck" name="truck" onclick="truckSelected()" checked="checked">
+            <label for="truck" onclick="truckSelected()">Truck</label>
+
+            <input type="radio" id="car" name="car" onclick="carSelected()">
+            <label for="car" onclick="carSelected()">Car</label>
+        </div>
+        <div>
+            <div id="towStrapDiv">
+                <input type="checkbox" id="towStrap" >
+                <label for="towStrap">Tow strap on the vehicle</label>
+            </div>
+            <div id="notLifted5inchDiv">
+                <input type="checkbox" id="notLifted5inch">
+                <label for="notLifted5inch">Not lifted more than 5 inches</label>
+            </div>
+            <div id="lessThen85Div" style="display:none">
+                <input type="checkbox" id="lessThen85">
+                <label for="lessThen85">Less than 85% tire wear</label>
+            </div>
+        </div>
+        <div>
+            <input type="button" value="Add car on track" onclick="postData()"  />
+        </div>
+    </div>
+
+    <script>
+        function truckSelected() {
+            var notLifted5inch = document.getElementById("notLifted5inchDiv");
+            notLifted5inch.style.display = "block";
+            var lessThen = document.getElementById("lessThen85Div");
+            lessThen.style.display = "none";
+            document.getElementById("car").checked = false;            
+        }
+        function carSelected() {
+            var notLifted5inch = document.getElementById("notLifted5inchDiv");
+            notLifted5inch.style.display = "none";
+            var lessThen85 = document.getElementById("lessThen85Div");
+            lessThen85.style.display = "block";
+            document.getElementById("truck").checked = false;            
+        }
+
+        function postData() {
+            var truck = document.getElementById("truck");
+            var towStrap = document.getElementById("towStrap");
+
+            if (!towStrap.checked) {
+                alert("Tow Strap should be on vehicle!");
+                return;
+            }                
+
+            var selectVehicle = '';
+            if (truck.checked) {
+                selectVehicle = 'truck';
+                var notLifted5inch = document.getElementById("notLifted5inch");
+                if (!notLifted5inch.checked) {
+                    alert("Should be not lifted more than 5 inches!");
+                    return;
+                }
+            }
+            else {
+                selectVehicle = 'car'
+                var lessThen85 = document.getElementById("lessThen85");
+                if (!lessThen85.checked) {
+                    alert("Should be less than 85% tire wear!");
+                    return;
+                }
+            }
+            $.ajax({
+                type: 'POST',
+                url: '/AddVehicleOnTrack/Add',
+                data: { 'vehicleStr': selectVehicle }
+            }).then(function (response) {
+                if (response == 'ok')
+                    alert("Vehicle was cussessfully added on track!");
+                if (response == 'nok')
+                    alert("A maximum of 5 vehicles can be on the race-track!");
+                if (response == 'error')
+                    alert("Some error happened during adding vehicle on track!");
+            });
+        }      
+    </script>
+

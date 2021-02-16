@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+    <div class="text-center">
+        <h3><a href="/AddVehicleOnTrack">Add Vehicle</a></h3>
+        <table>           
+            <tr>              
+                <td><p>Track</p></td>
+                <td><p>Vehicle name</p></td>             
+            </tr>
+            @foreach (var b in ViewBag.VehiclesOnTrack)
+            {
+                <tr>
+                    <td><p>@b.Id</p></td>
+                    <td><p>@b.Name </p></td>                    
+                </tr>
+            }
+        </table>
+    </div>
